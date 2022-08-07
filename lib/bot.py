@@ -17,7 +17,7 @@ if os.environ['CUSTOM'] == "TRUE":
 	import custom
 
 status = server.status()
-print("The server has {0} players and replied in {1} ms".format(status.players.online, status.latency))
+print("The server has {0} players and replied in {1} ms".format(status.players.online, round(status.latency, 3)))
 query = server.query()
 print("The server has the following players online: {0}".format(", ".join(query.players.names)))
 
@@ -78,9 +78,9 @@ async def on_message(message):
 			status = server.status()
 			query = server.query()
 			if status.players.online > 0:
-				msg = str("The server has {0} players and replied in {1} ms\nPlayers:\n - {2}".format(status.players.online, status.latency, "\n - ".join(query.players.names)))
+				msg = str("The server has {0} players and replied in {1} ms\nPlayers:\n - {2}".format(status.players.online, round(status.latency, 3), "\n - ".join(query.players.names)))
 			else:
-				msg = str("The server has {0} players and replied in {1} ms".format(status.players.online, status.latency))
+				msg = str("The server has {0} players and replied in {1} ms".format(status.players.online, round(status.latency, 3)))
 		except:
 			msg = "Server doesn't seem to be repsonding; please message {} for help".format(os.environ["ADMINNAME"])
 		checkNicknames = msg.split("\n - ")
