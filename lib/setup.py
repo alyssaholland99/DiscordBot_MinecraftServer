@@ -39,7 +39,7 @@ def environment():
 
     '''Sets the port used for the minecraft server'''
     if str(settingList.index("Port")+1) in settingsChoice:
-        port = input("Input your bot port here (If you don't know it, leave blank) > ")
+        port = input("Input your server port here (If you don't know it, leave blank) > ")
         if port == "":
             port = "25565" #Default Minecraft server port
     else:
@@ -89,6 +89,7 @@ def environment():
                 template.close()
             custom = "TRUE"
     else:
+        custom = "FALSE"
         custom = os.environ['CUSTOM']
 
     '''Sets the URL for the server map'''
