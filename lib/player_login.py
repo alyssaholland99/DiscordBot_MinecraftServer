@@ -90,7 +90,7 @@ async def players():
 		 #CHANGE THE ID
 
 		for i in joinedPlayers:
-			msg = i + " has joined the minecraft server\n"
+			msg = i + " **joined** the minecraft server\n"
 			if msg != "":
 				if i in messageIDs:
 					delmsg = await channel.fetch_message(messageIDs[i])
@@ -99,7 +99,7 @@ async def players():
 				await logsChannel.send(msg)
 				messageIDs[i] = sent_message.id
 		for i in leftPlayers:
-			msg =  i + " has left the minecraft server\n"
+			msg =  i + " **left** the minecraft server\n"
 			if msg != "":
 				if i in messageIDs:
 					delmsg = await channel.fetch_message(messageIDs[i])
