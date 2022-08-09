@@ -47,6 +47,9 @@ async def players():
 	logsChannel = client.get_channel(1006630834549313666)
 	outagesChannel = client.get_channel(1005824369467064371)
 
+
+	failCount = 0
+
 	mgs = [] #Empty list to put all the messages in the log 
 	async for x in channel.history(limit=100):
 		await x.delete()
@@ -76,18 +79,20 @@ async def players():
 				print(joinedPlayers)
 				print(leftPlayers)
 		except:
-			
-			await outagesChannel.send("The server appears to have gone down")
-			working = False
-			server = MinecraftServer(os.environ['SERVER'], int(os.environ['PORT']))
-			while (working == False):
-				try:
-					if(status.latency > 0 and status.latency < 100):
-						working = True
-						await outagesChannel.send("The server appears to have be back up")
-				except:
-					pass
-		 #CHANGE THE ID
+			if failCount >= 3:
+				await outagesChannel.send("The server appears to have gone down")
+				working = False
+				server = MinecraftServer(os.environ['SERVER'], int(os.environ['PORT']))
+				while (working == False):
+					try:
+						if(status.latency > 0 and status.latency < 100):
+							working = True
+							failCount = 0
+							await outagesChannel.send("The server appears to be back up")
+					except:
+						pass
+			failCount = failCount + 1
+			continue
 
 		for i in joinedPlayers:
 			msg = i + " **joined** the minecraft server\n"
