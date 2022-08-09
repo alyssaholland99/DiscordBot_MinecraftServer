@@ -21,10 +21,10 @@ if os.environ['CUSTOM'] == "TRUE":
 	copyfile("Custom.py", "lib/custom.py")
 	import custom
 
-status = server.status()
-print("The server has {0} players and replied in {1} ms".format(status.players.online, round(status.latency, 3)))
-query = server.query()
-print("The server has the following players online: {0}".format(", ".join(query.players.names)))
+#status = server.status()
+#print("The server has {0} players and replied in {1} ms".format(status.players.online, round(status.latency, 3)))
+#query = server.query()
+#print("The server has the following players online: {0}".format(", ".join(query.players.names)))
 
 token = os.environ['TOKEN']
 
@@ -43,6 +43,13 @@ messageIDs = {}
 
 @tasks.loop()
 async def players():
+	channel = client.get_channel(1005838791451365506)
+	logsChannel = client.get_channel(1006630834549313666)
+	outagesChannel = client.get_channel(1005824369467064371)
+
+	mgs = [] #Empty list to put all the messages in the log 
+	async for x in channel.history(limit=100):
+		await x.delete()
 	while True:
 
 		global old_players
@@ -68,11 +75,20 @@ async def players():
 				old_players = query.players.names
 				print(joinedPlayers)
 				print(leftPlayers)
-		except KeyboardInterrupt:
-			exit()
-		channel = client.get_channel(1005838791451365506)
-		print(channel)
-		print(msg)
+		except:
+			
+			await outagesChannel.send("The server appears to have gone down")
+			working = False
+			server = MinecraftServer(os.environ['SERVER'], int(os.environ['PORT']))
+			while (working == False):
+				try:
+					if(status.latency > 0 and status.latency < 100):
+						working = True
+						await outagesChannel.send("The server appears to have be back up")
+				except:
+					pass
+		 #CHANGE THE ID
+
 		for i in joinedPlayers:
 			msg = i + " has joined the minecraft server\n"
 			if msg != "":
@@ -80,6 +96,7 @@ async def players():
 					delmsg = await channel.fetch_message(messageIDs[i])
 					await delmsg.delete()
 				sent_message = await channel.send(msg)
+				await logsChannel.send(msg)
 				messageIDs[i] = sent_message.id
 		for i in leftPlayers:
 			msg =  i + " has left the minecraft server\n"
@@ -88,6 +105,7 @@ async def players():
 					delmsg = await channel.fetch_message(messageIDs[i])
 					await delmsg.delete()
 				sent_message = await channel.send(msg)
+				await logsChannel.send(msg)
 				messageIDs[i] = sent_message.id
 		
 			

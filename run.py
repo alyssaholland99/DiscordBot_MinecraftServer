@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 def run():
 
     from lib import librarySetup
@@ -10,5 +11,5 @@ def run():
     if not os.path.isfile('.env'): #Initial setup
         setup.environment()
     
-    os.system("python3 lib/bot.py") #Run main program
+    os.system("python3 lib/bot.py & python3 lib/player_login.py") #Run main program
 run()
